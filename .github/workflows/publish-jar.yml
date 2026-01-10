@@ -42,12 +42,8 @@ jobs:
           else
             TAG=${GITHUB_REF#refs/tags/}
           fi
-          if [[ ! $TAG =~ ^v ]]; then
-            echo "Error: Tag must start with 'v'"
-            exit 1
-          fi
           if [[ ! $TAG == v${{ steps.version.outputs.VERSION }} ]]; then
-            echo "Error: Tag version ($TAG) does not match project version (v${{ steps.version.outputs.VERSION }})"
+            echo "Error: Tag version ($TAG) does not match project version (${{ steps.version.outputs.VERSION }})"
             exit 1
           fi
       - name: Install Node modules
