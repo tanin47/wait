@@ -42,7 +42,7 @@ jobs:
           else
             TAG=${GITHUB_REF#refs/tags/}
           fi
-          if [[ ! $TAG == v${{ steps.version.outputs.VERSION }} ]]; then
+          if [[ ! $TAG == ${{ steps.version.outputs.VERSION }} ]]; then
             echo "Error: Tag version ($TAG) does not match project version (${{ steps.version.outputs.VERSION }})"
             exit 1
           fi
