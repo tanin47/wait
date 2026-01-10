@@ -1,7 +1,7 @@
 Wait
 =====
 
-[![Sonatype Central](https://maven-badges.sml.io/sonatype-central/io.github.tanin47/wait.svg)](https://central.sonatype.com/artifact/io.github.tanin47/wait)
+[![Sonatype Central](https://maven-badges.sml.io/sonatype-central/io.github.tanin47/wait/badge.svg)](https://central.sonatype.com/artifact/io.github.tanin47/wait)
 ![Github Actions](https://github.com/tanin47/wait/actions/workflows/ci.yml/badge.svg?branch=main)
 [![codecov](https://codecov.io/gh/tanin47/wait/graph/badge.svg?token=BGQU70MAUP)](https://codecov.io/gh/tanin47/wait)
 
