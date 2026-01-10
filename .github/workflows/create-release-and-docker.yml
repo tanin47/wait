@@ -3,7 +3,7 @@ name: create-release-and-docker
 on:
   push:
     tags:
-      - 'v*'
+      - '*'
   workflow_dispatch:
     inputs:
       tag:
@@ -46,13 +46,9 @@ jobs:
           else
             TAG=${GITHUB_REF#refs/tags/}
           fi
-          if [[ ! "$TAG" =~ ^v ]]; then
-            echo "Error: Tag must start with 'v'"
-            exit 1
-          fi
           TAG_VERSION=${TAG#v}
           if [ "$TAG_VERSION" != "${{ steps.version.outputs.VERSION }}" ]; then
-            echo "Error: Git tag version ($TAG_VERSION) doesn't match project version (v${{ steps.version.outputs.VERSION }})"
+            echo "Error: Git tag version ($TAG_VERSION) doesn't match project version (${{ steps.version.outputs.VERSION }})"
             exit 1
           fi
       - name: Install Node modules
@@ -64,7 +60,7 @@ jobs:
         with:
           draft: true
           prerelease: true
-          files: ./build/staging-deploy/io/github/tanin47/embeddable-java-web-framework/**/*
+          files: ./build/staging-deploy/io/github/tanin47/wait/**/*
           overwrite_files: true
           fail_on_unmatched_files: true
           generate_release_notes: true

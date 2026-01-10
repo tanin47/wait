@@ -46,10 +46,13 @@ jobs:
           ./gradlew --no-daemon jacocoTestReport
         env:
           HEADLESS: true
+          GOOGLE_SHEET_SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.GOOGLE_SHEET_SERVICE_ACCOUNT_KEY_JSON }}
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+          GOOGLE_SHEET_NAME: ${{ secrets.GOOGLE_SHEET_NAME }}
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_ORG_TOKEN }}
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       - name: Publish Test Results
         uses: dorny/test-reporter@v1
         if: ${{ !cancelled() }}
