@@ -1,11 +1,11 @@
 services:
   - type: web
-    name: embeddable-java-web-framework
+    name: wait
     plan: free
     runtime: image
     image:
-      url: docker.io/tanin47/embeddable-java-web-framework:1.0.0
-    dockerCommand: java -jar embeddable-java-web-framework-1.0.0.jar
+      url: docker.io/tanin47/wait:0.1.0
+    dockerCommand: java -jar wait-0.1.0.jar
     healthCheckPath: /healthcheck
     envVars:
       - key: PORT

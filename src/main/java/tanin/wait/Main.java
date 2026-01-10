@@ -20,12 +20,20 @@ public class Main {
   }
 
   static String readFromEnvOrFile(String envName, String filePath) {
+    return readFromEnvOrFile(envName, filePath, null);
+  }
+
+  static String readFromEnvOrFile(String envName, String filePath, String defaultValue) {
     var value = System.getenv(envName);
     if (value == null || value.isEmpty()) {
       try {
         value = new String(Files.readAllBytes(Path.of(filePath)));
       } catch (IOException e) {
-        throw new RuntimeException(envName + " environment variable or " + filePath + " file must be set");
+        if (defaultValue == null || defaultValue.isEmpty()) {
+          throw new RuntimeException(envName + " environment variable or " + filePath + " file must be set");
+        } else {
+          value = defaultValue;
+        }
       }
     }
 
@@ -44,7 +52,7 @@ public class Main {
 
   public static void main(String[] args) {
     var main = new WaitServer(
-      9090,
+      Integer.parseInt(readFromEnvOrFile("PORT", "./secrets/PORT", "9090")),
       getServiceAccountKeyJson(),
       getSheetId(),
       getSheetName()

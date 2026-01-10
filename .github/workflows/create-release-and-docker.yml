@@ -22,8 +22,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag || github.ref_name }}
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -60,7 +58,7 @@ jobs:
         with:
           draft: true
           prerelease: true
-          files: ./build/staging-deploy/io/github/tanin47/wait/**/*
+          files: ./build/staging-deploy/io/github/tanin47/**/*
           overwrite_files: true
           fail_on_unmatched_files: true
           generate_release_notes: true
@@ -80,4 +78,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: tanin47/embeddable-java-web-framework:${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag || github.ref_name }}
+          tags: tanin47/wait:${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag || github.ref_name }}
