@@ -10,8 +10,10 @@ Wait is an self-hostable CORS-enabled headless wait list system that connects to
 Wait supports CORS. Your static page can invoke `fetch(..)` to the Wait server from *a different domain*. 
 This means your static page doesn't need a backend and can be hosted for free anywhere e.g. Netlify, Github Pages.
 
-Wait supports multiple groups. You can host one Wait server that serves multiple websites or landing pages.
-It's the cheapest option for a waiting list system. You can get a ~$4/month VPS to host Wait and power >10 websites and landing pages at the same time.
+Wait supports multiple groups. You can host one Wait server that serves multiple websites and landing pages.
+
+This is the cheapest option for a waiting list system. You can get a ~$4/month VPS to host Wait and power many websites 
+and landing pages at the same time.
 
 
 How to integrate with a Wait server
@@ -22,28 +24,43 @@ Let's assume you host a Wait server at: `waitserver.com`
 On your `yournewproduct.com`, you can have the following code that performs a cross-domain `fetch(..)` to the Wait server:
 
 ```
-async function joinWaitlist(email) {
-    const resp = await fetch('http://waitserver.com/write', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-          email,
-          group: 'your-group-name' // for the scenario where you have multiple websites.
-      })
-    })
+<form id="form" method="POST">
+  <input type="email" name="email" />
+  <button name="submitButton" type="submit">Join our waitlist</button>
+</form>
 
-    if (resp.status === 200) {
-      // Done
-    } else if (resp.status === 400) {
-      const json = await resp.json()
-      console.log(json.error)
-    } else {
-      console.log(resp)
+<script>
+  var form = document.getElementById("waitlistJsonForm");
+  var emailInput = form.querySelector('[name="email"]');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch('/write', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({email: emailInput.value, group: 'test-wait-json-data'}),
+      });
+
+      if (response.status === 200) {
+        // Succeeded. Show the success message or perform any other action.
+      } else if (response.status === 400) {
+        const json = await response.json();
+        alert(json.error);
+        // Show the error message appropriately.
+      } else {
+        alert('Unknown error occurred. Please kindly open an issue at https://github.com/tanin47/wait');
+      }
+    } catch (error) {
+      console.log(error);
+      alert('Unknown error occurred. Please kindly open an issue at https://github.com/tanin47/wait');
     }
-}
-
-// Somewhere else, there is a button that triggers `joinWaitlist(email)` when clicked.
+  });
+</script>
 ```
+
+Please see: `src/resources/html/index.html` for a working example.
 
 Next, we want to set up a Google Sheet and run a Wait server!
 
@@ -89,7 +106,7 @@ __<ins>Use Docker</ins>__
 The docker image is here: https://hub.docker.com/repository/docker/tanin47/wait
 
 ```
-export GOOGLE_SHEET_SERVICE_ACCOUNT_KEY_JSON=<your_json_key_in_string>
+export GOOGLE_SHEET_SERVICE_ACCOUNT_KEY_JSON=`cat service_account_key.json`
 export GOOGLE_SHEET_ID=<your_google_sheet_id>
 export GOOGLE_SHEET_NAME=<your_google_sheet_name>
 docker run -p 9090:9090 \
@@ -119,7 +136,7 @@ the [Releases](https://github.com/tanin47/wait/releases) page.
 Then, you can run the command below:
 
 ```
-export GOOGLE_SHEET_SERVICE_ACCOUNT_KEY_JSON=<your_service_account_key_json_in_string>
+export GOOGLE_SHEET_SERVICE_ACCOUNT_KEY_JSON=`cat service_account_key.json`
 export GOOGLE_SERVICE_ACCOUNT_SHEET_ID=<your_google_sheet_id>
 export GOOGLE_SERVICE_ACCOUNT_SHEET_PRIVATE_KEY=<your_google_sheet_name>
 java -jar wait-0.1.0.jar
@@ -162,9 +179,8 @@ main.start();
 How to develop
 ---------------
 
-1. Run `npm install` to install all dependencies.
-2. Run `./gradlew run` to run the web server.
-3. On a separate terminal, run `npm run hmr` in order to hot-reload the frontend code changes.
+1. Run `./gradlew run` to run the web server.
+2. Visit http://localhost:9090
 
 
 Publish JAR

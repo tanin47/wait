@@ -38,11 +38,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
         with:
           cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/master' }}
-      - name: Install Node modules
-        run: npm install
       - name: Run tests
         run: |
-          npm run hmr &
           ./gradlew --no-daemon jacocoTestReport
         env:
           HEADLESS: true

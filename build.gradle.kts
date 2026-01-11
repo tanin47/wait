@@ -22,13 +22,6 @@ java {
     }
     withSourcesJar()
     withJavadocJar()
-    sourceSets {
-        main {
-            resources {
-                srcDir("build/compiled-frontend-resources")
-            }
-        }
-    }
 }
 
 tasks.jacocoTestReport {
@@ -140,56 +133,10 @@ jreleaser {
 }
 
 
-tasks.register<Exec>("compileTailwind") {
-    inputs.files(fileTree("frontend"))
-    outputs.dir("build/compiled-frontend-resources")
-
-    environment("NODE_ENV", "production")
-
-    commandLine(
-        "./node_modules/.bin/postcss",
-        "./frontend/stylesheets/tailwindbase.css",
-        "--config",
-        ".",
-        "--output",
-        "./build/compiled-frontend-resources/assets/stylesheets/tailwindbase.css"
-    )
-}
-
-tasks.register<Exec>("compileSvelte") {
-    inputs.files(fileTree("frontend"))
-    outputs.dir("build/compiled-frontend-resources")
-
-    environment("NODE_ENV", "production")
-    environment("ENABLE_SVELTE_CHECK", "true")
-
-    commandLine(
-        "./node_modules/webpack/bin/webpack.js",
-        "--config",
-        "./webpack.config.js",
-        "--output-path",
-        "./build/compiled-frontend-resources/assets",
-        "--mode",
-        "production"
-    )
-}
-
-tasks.processResources {
-    dependsOn("compileTailwind")
-    dependsOn("compileSvelte")
-}
-
-tasks.named("sourcesJar") {
-    dependsOn("compileTailwind")
-    dependsOn("compileSvelte")
-}
-
 tasks.shadowJar {
     archiveClassifier.set("") // Remove the suffix -all.
     relocate("com", "tanin.wait.com")
     exclude("META-INF/MANIFEST.MF")
-    exclude("local_dev_marker.ejwf")
-
 }
 
 tasks.jar {
