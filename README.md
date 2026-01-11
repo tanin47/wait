@@ -5,7 +5,9 @@ Wait
 ![Github Actions](https://github.com/tanin47/wait/actions/workflows/ci.yml/badge.svg?branch=main)
 [![codecov](https://codecov.io/gh/tanin47/wait/graph/badge.svg?token=BGQU70MAUP)](https://codecov.io/gh/tanin47/wait)
 
-Wait is an self-hostable CORS-enabled headless wait list system that connects to Google Sheets. No database is needed.
+Wait is an self-hostable CORS-enabled headless waitlist system that connects to Google Sheets. No database is needed.
+
+Imagine you have a static landing page that you want to collect emails from the visitors who are interested. Wait is the perfect system for that.
 
 Wait supports CORS. Your static page can invoke `fetch(..)` to the Wait server from *a different domain*. 
 This means your static page doesn't need a backend and can be hosted for free anywhere e.g. Netlify, Github Pages.
