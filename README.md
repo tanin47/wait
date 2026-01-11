@@ -112,13 +112,11 @@ export GOOGLE_SHEET_SERVICE_ACCOUNT_KEY_JSON=`cat service_account_key.json`
 export GOOGLE_SHEET_ID=<your_google_sheet_id>
 export GOOGLE_SHEET_NAME=<your_google_sheet_name>
 docker run -p 9090:9090 \
-           --entrypoint "" \
            --pull always \
            -e GOOGLE_SHEET_SERVICE_ACCOUNT_KEY_JSON \
            -e GOOGLE_SHEET_ID \
            -e GOOGLE_SHEET_NAME \
-           tanin47/wait:0.1.0 \
-           java -jar wait-0.1.0.jar
+           tanin47/wait:0.2.1
 ```
 
 __<ins>Use Render.com</ins>__
@@ -141,7 +139,7 @@ Then, you can run the command below:
 export GOOGLE_SHEET_SERVICE_ACCOUNT_KEY_JSON=`cat service_account_key.json`
 export GOOGLE_SERVICE_ACCOUNT_SHEET_ID=<your_google_sheet_id>
 export GOOGLE_SERVICE_ACCOUNT_SHEET_PRIVATE_KEY=<your_google_sheet_name>
-java -jar wait-0.1.0.jar
+java -jar wait-0.2.1.jar
 ```
 
 Then, you can visit http://localhost:9090
@@ -157,7 +155,7 @@ If you are using JVM, you can embed Wait into your already running system. No ne
 <dependency>
     <groupId>io.github.tanin47</groupId>
     <artifactId>wait</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.1</version>
 </dependency>
 ```
 
@@ -204,11 +202,11 @@ Publish Docker
 
 This flow has been set up as a part of the Github Actions workflow: `create-release-and-docker`.
 
-1. Run `docker buildx build --platform linux/amd64,linux/arm64 -t wait:0.1.0 .`
+1. Run `docker buildx build --platform linux/amd64,linux/arm64 -t wait:0.2.1 .`
 2. Test locally with:
-   `docker run -p 9090:9090 --entrypoint "" wait:0.1.0 java -jar wait-0.1.0.jar -port 9090`
-3. Run: `docker tag wait:0.1.0 tanin47/wait:0.1.0`
-4. Run: `docker push tanin47/wait:0.1.0`
+   `docker run -p 9090:9090 --entrypoint "" wait:0.2.1 java -jar wait-0.2.1.jar -port 9090`
+3. Run: `docker tag wait:0.2.1 tanin47/wait:0.2.1`
+4. Run: `docker push tanin47/wait:0.2.1`
 5. Go to Render.com, sync the blueprint, and test that it works
 
 Release a new version
@@ -217,6 +215,6 @@ Release a new version
 1. Create an empty release with a new tag. The tag must follow the format: `vX.Y.Z`.
 2. Go to Actions and wait for the `create-release-and-docker` (which is triggered automatically) workflow to finish.
 3. Test the docker with
-   `docker run -p 9090:9090 --entrypoint "" tanin47/wait:0.1.0 java -jar wait-0.1.0.jar -port 9090`.
+   `docker run -p 9090:9090 --entrypoint "" tanin47/wait:0.2.1 java -jar wait-0.2.1.jar -port 9090`.
 4. Go to Actions and trigger the workflow `publish-jar` on the tag `vX.Y.Z` in order to publish the JAR to Central
    Sonatype.
