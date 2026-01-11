@@ -9,8 +9,8 @@ Wait is an self-hostable CORS-enabled headless waitlist system that connects to 
 
 Imagine you have a static landing page that you want to collect emails from the visitors who are interested. Wait is the perfect system for that.
 
-Wait supports CORS. Your static page can invoke `fetch(..)` to the Wait server from *a different domain*. 
-This means your static page doesn't need a backend and can be hosted for free anywhere e.g. Netlify, Github Pages.
+Wait is headless and supports CORS. Your static page owns the UI completely and invokes `fetch(..)` to the Wait server from *a different domain*. 
+This means your static page doesn't need a backend and can be hosted for free anywhere e.g. Netlify, Github Pages. Since your static page owns the UI (not tunneling to an iframe), the styling and customization is extremely flexible.
 
 Wait supports multiple groups. You can host one Wait server that serves multiple websites and landing pages.
 
