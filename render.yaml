@@ -4,8 +4,7 @@ services:
     plan: free
     runtime: image
     image:
-      url: docker.io/tanin47/wait:0.1.0
-    dockerCommand: java -jar wait-0.1.0.jar
+      url: docker.io/tanin47/wait:0.2.1
     healthCheckPath: /healthcheck
     envVars:
       - key: PORT
