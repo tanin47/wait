@@ -12,7 +12,7 @@ async function submit() {
   succeeded = false
   error = ''
   try {
-    const resp = await fetch('http://waitbackend.com:9090/write', {
+    const resp = await fetch('/write', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({email, group: 'test-wait-list'})
