@@ -2,6 +2,7 @@ package tanin.wait;
 
 import com.eclipsesource.json.Json;
 import com.renomad.minum.web.FullSystem;
+import com.renomad.minum.web.IRequest;
 import com.renomad.minum.web.Response;
 import com.renomad.minum.web.StatusLine;
 
@@ -48,6 +49,20 @@ public class WaitServer {
     this.sheetName = sheetName;
   }
 
+  Map<String, String> addCorsHeaders(Map<String, String> headers, IRequest req) {
+    var origin = req.getHeaders().valueByKey("Origin");
+    var corsHeaders = Map.of(
+        "Access-Control-Allow-Origin", origin == null || origin.isEmpty() ? "*" : origin.getFirst(),
+        "Access-Control-Allow-Methods", "POST",
+        "Access-Control-Allow-Headers", "*",
+        "Vary", "Origin"
+    );
+
+    return new java.util.HashMap<>(headers) {{
+      putAll(corsHeaders);
+    }};
+  }
+
   public void start() {
     minum = MinumBuilder.build(port);
     var wf = minum.getWebFramework();
@@ -65,14 +80,10 @@ public class WaitServer {
       OPTIONS,
       "write",
       req -> {
+        var origin = req.getHeaders().valueByKey("Origin");
         return Response.buildResponse(
           StatusLine.StatusCode.CODE_200_OK,
-          Map.of(
-            "Access-Control-Allow-Origin", req.getHeaders().valueByKey("Origin").getFirst(),
-            "Access-Control-Allow-Methods", "POST",
-            "Access-Control-Allow-Headers", "*",
-            "Vary", "Origin"
-          ),
+          addCorsHeaders(Map.of(), req),
           ""
         );
       }
@@ -92,13 +103,7 @@ public class WaitServer {
         if (email == null || email.isBlank() || !email.contains("@")) {
           return Response.buildResponse(
             StatusLine.StatusCode.CODE_400_BAD_REQUEST,
-            Map.of(
-              "Content-Type", "application/json",
-              "Access-Control-Allow-Origin", req.getHeaders().valueByKey("Origin").getFirst(),
-              "Access-Control-Allow-Methods", "POST",
-              "Access-Control-Allow-Headers", "*",
-              "Vary", "Origin"
-            ),
+            addCorsHeaders(Map.of("Content-Type", "application/json"), req),
             Json.object()
               .add("error", "The email is invalid.")
               .toString()
@@ -109,13 +114,7 @@ public class WaitServer {
 
         return Response.buildResponse(
           StatusLine.StatusCode.CODE_200_OK,
-          Map.of(
-            "Content-Type", "application/json",
-            "Access-Control-Allow-Origin", req.getHeaders().valueByKey("Origin").getFirst(),
-            "Access-Control-Allow-Methods", "POST",
-            "Access-Control-Allow-Headers", "*",
-            "Vary", "Origin"
-          ),
+          addCorsHeaders(Map.of("Content-Type", "application/json"), req),
           Json.object().toString()
         );
       }

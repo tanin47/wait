@@ -46,8 +46,6 @@ jobs:
             echo "Error: Tag version ($TAG) does not match project version (${{ steps.version.outputs.VERSION }})"
             exit 1
           fi
-      - name: Install Node modules
-        run: npm install
       - name: Build a publishable JAR
         run: ./gradlew clean publish
       - name: Publish to Sonatype

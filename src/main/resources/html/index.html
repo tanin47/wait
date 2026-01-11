@@ -2,15 +2,100 @@
 <html lang="en" data-theme="dracula">
 <head>
   <title>Wait: Headless wait list system that connects to Google Sheets</title>
-  <link rel="stylesheet" href="/assets/stylesheets/tailwindbase.css">
+  <style>
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 400px;
+      padding: 16px;
+      margin: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .container > .title {
+      font-size: 24px;
+    }
+
+    .container > form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .text-error {
+      color: darkred;
+    }
+
+    .text-success {
+      color: darkgreen;
+    }
+  </style>
 </head>
 <body>
-  <script src="/assets/svelte/index.js"></script>
-  <link rel="stylesheet" href="/assets/svelte/home/index.css">
-  <div id="app"></div>
+  <div class="container">
+    <div class="title">application/json</div>
+    <form id="waitlistJsonForm" method="POST">
+      <input type="text" name="email" placeholder="Your Email" data-test-id="email" />
+      <button name="submitButton" type="submit" data-test-id="submitButton">Join our waitlist</button>
+      <div class="text-error hidden errorMessage" data-test-id="error"></div>
+      <div class="text-success hidden successMessage" data-test-id="success">Thank you for joining our waitlist!</div>
+    </form>
+  </div>
 
   <script>
-    new Index.default({target: document.getElementById('app')});
+  function setupJsonForm() {
+    var form = document.getElementById("waitlistJsonForm");
+    var emailInput = form.querySelector('[name="email"]');
+    var submitButton = form.querySelector('[name="submitButton"]');
+    var successMessage = form.querySelector('.successMessage');
+    var errorMessage = form.querySelector('.errorMessage');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      successMessage.classList.add('hidden');
+      errorMessage.classList.add('hidden');
+      submitButton.classList.add('animated-gradient');
+
+      emailInput.disabled = true;
+      submitButton.disabled = true;
+
+      try {
+        const response = await fetch('/write', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({email: emailInput.value, group: 'test-wait-json-data'}),
+        });
+
+        if (response.status === 200) {
+          successMessage.classList.remove('hidden');
+          errorMessage.classList.add('hidden');
+        } else if (response.status === 400) {
+          const json = await response.json();
+          errorMessage.textContent = json.error;
+          errorMessage.classList.remove('hidden');
+        } else {
+          errorMessage.textContent = 'Unknown error occurred. Please kindly open an issue at https://github.com/tanin47/wait';
+          errorMessage.classList.remove('hidden');
+        }
+      } catch (error) {
+        console.log(error);
+        errorMessage.textContent = 'Unknown error occurred. Please kindly open an issue at https://github.com/tanin47/wait';
+        errorMessage.classList.remove('hidden');
+      } finally {
+        emailInput.disabled = false;
+        submitButton.disabled = false;
+        submitButton.classList.remove('animated-gradient');
+      }
+    });
+  }
+
+  setupJsonForm();
   </script>
 </body>
 </html>
