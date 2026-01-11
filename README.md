@@ -15,6 +15,8 @@ Wait supports multiple groups. You can host one Wait server that serves multiple
 This is the cheapest option for a waiting list system. You can get a ~$4/month VPS to host Wait and power many websites 
 and landing pages at the same time.
 
+![Wait Architecture](./diagram.png)
+
 
 How to integrate with a Wait server
 ------------------------------------
