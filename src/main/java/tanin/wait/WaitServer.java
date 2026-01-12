@@ -1,13 +1,12 @@
 package tanin.wait;
 
 import com.eclipsesource.json.Json;
-import com.renomad.minum.web.FullSystem;
-import com.renomad.minum.web.IRequest;
-import com.renomad.minum.web.Response;
-import com.renomad.minum.web.StatusLine;
+import com.renomad.minum.web.*;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -66,6 +65,18 @@ public class WaitServer {
   public void start() {
     minum = MinumBuilder.build(port);
     var wf = minum.getWebFramework();
+
+    wf.registerPreHandler((inputs) -> {
+      var request = inputs.clientRequest();
+      try {
+        var response = inputs.endpoint().apply(inputs.clientRequest());
+        logger.info(request.getRequestLine().getMethod() + " " + request.getRequestLine().getPathDetails().getIsolatedPath() + " " + response.getStatusCode());
+        return response;
+      } catch (Exception e) {
+        logger.log(Level.SEVERE, request.getRequestLine().getMethod() + " " + request.getRequestLine().getPathDetails().getIsolatedPath() + " raised an exception", e);
+        throw e;
+      }
+    });
 
     wf.registerPath(
       GET,
